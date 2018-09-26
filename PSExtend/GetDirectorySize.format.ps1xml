@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>PSExtend</Name>
+            <ViewSelectedBy>
+                <TypeName>PSExtend.FileSystemInfo</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <Label>Name</Label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>Size</Label>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>Name</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+                                    if ($_.Size -gt 1TB) {
+                                        "{0:N3} TB" -f ([double]$_.Size / 1TB)
+                                    } elseif ($_.Size -gt 1GB) {
+                                        "{0:N3} GB" -f ([double]$_.Size / 1GB)
+                                    } elseif ($_.Size -gt 1MB) {
+                                        "{0:N3} MB" -f ([double]$_.Size / 1MB)
+                                    } elseif ($_.Size -gt 1KB) {
+                                        "{0:N3} KB" -f ([double]$_.Size / 1KB)
+                                    } else {
+                                        "{0:N0} B" -f $_.Size
+                                    }
+                                </ScriptBlock>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>
