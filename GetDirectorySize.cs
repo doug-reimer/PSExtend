@@ -17,6 +17,7 @@ namespace PSExtend
             Position = 0,
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
+        [Alias("FullName")]
         public string Path { get; set; }
 
         // This method gets called once for each cmdlet in the pipeline when the 
