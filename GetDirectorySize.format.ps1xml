@@ -41,5 +41,44 @@
                 </TableRowEntries>
             </TableControl>
         </View>
+        <View>
+            <Name>PSExtendList</Name>
+            <ViewSelectedBy>
+                <TypeName>PSExtend.FileSystemInfo</TypeName>
+            </ViewSelectedBy>
+            <ListControl>
+                <ListEntries>
+                    <ListEntry>
+                        <ListItems>
+                            <ListItem>
+                             <PropertyName>Name</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                             <PropertyName>FullName</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                             <Label>Size</Label>
+                             <ScriptBlock>
+                                if ($_.Size -gt 1tb) {
+                                    "{0:N3} TB" -f ([double]$_.Size / 1tb)
+                                } elseif ($_.Size -gt 1gb) {
+                                    "{0:N3} GB" -f ([double]$_.Size / 1gb)
+                                } elseif ($_.Size -gt 1mb) {
+                                    "{0:N3} MB" -f ([double]$_.Size / 1mb)
+                                } elseif ($_.Size -gt 1kb) {
+                                    "{0:N3} KB" -f ([double]$_.Size / 1kb)
+                                } else {
+                                    "{0:N0} B" -f $_.Size
+                                }
+                             </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                             <PropertyName>IsDirectory</PropertyName>
+                            </ListItem>
+                        </ListItems>
+                    </ListEntry>
+                </ListEntries>
+            </ListControl>
+        </View>
     </ViewDefinitions>
 </Configuration>
