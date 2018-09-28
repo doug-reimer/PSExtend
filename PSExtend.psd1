@@ -63,7 +63,7 @@ Description = 'Cmdlets and Functions to Extend PowerShell'
 # TypesToProcess = @()
 
 # Format files (.ps1xml) to be loaded when importing this module
-FormatsToProcess = @('GetDirectorySize.format.ps1xml')
+FormatsToProcess = @('GetChildItemSize.format.ps1xml')
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
 # NestedModules = @()
@@ -72,7 +72,7 @@ FormatsToProcess = @('GetDirectorySize.format.ps1xml')
 FunctionsToExport = @()
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-CmdletsToExport = @('Get-DirectorySize')
+CmdletsToExport = @('Get-ChildItemSize')
 
 # Variables to export from this module
 VariablesToExport = '*'

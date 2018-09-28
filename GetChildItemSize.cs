@@ -8,23 +8,31 @@ using System.Linq;
 
 namespace PSExtend
 {
-    [Cmdlet(VerbsCommon.Get, "DirectorySize")]
+    [Cmdlet(VerbsCommon.Get, "ChildItemSize")]
     [OutputType(typeof(FileSystemInfo))]
-    public class GetDirectorySizeCommand : PSCmdlet
+    public class GetChildItemSizeCommand : PSCmdlet
     {
         [Parameter(
-            Mandatory = true,
+            Mandatory = false,
             Position = 0,
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [Alias("FullName")]
         public string Path { get; set; }
 
+        private string GetWorkingDirectory()
+        {
+            return CurrentProviderLocation("FileSystem").ProviderPath;
+        }
         // This method gets called once for each cmdlet in the pipeline when the 
         // pipeline starts executing
         protected override void BeginProcessing()
         {
             WriteVerbose("Begin!");
+            if (Path is null)
+            {
+                Path = GetWorkingDirectory();
+            }
         }
 
         // This method will be called for each input received from the pipeline to 

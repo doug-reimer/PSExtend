@@ -3,7 +3,7 @@
 This module contains Cmdlets that extend functionality within PowerShell.
 
 ### Cmdlets
-Get-DirectorySize
+Get-ChildItemSize
 
 
 #### Build Instructions
