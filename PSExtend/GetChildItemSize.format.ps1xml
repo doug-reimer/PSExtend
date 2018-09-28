@@ -14,6 +14,12 @@
                     <TableColumnHeader>
                         <Label>Size</Label>
                     </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>FileCount</Label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <Label>DirectoryCount</Label>
+                    </TableColumnHeader>
                 </TableHeaders>
                 <TableRowEntries>
                     <TableRowEntry>
@@ -35,6 +41,12 @@
                                         "{0:N0} B" -f $_.Size
                                     }
                                 </ScriptBlock>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>FileCount</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>DirectoryCount</PropertyName>
                             </TableColumnItem>
                         </TableColumnItems>
                     </TableRowEntry>
@@ -71,6 +83,12 @@
                                     "{0:N0} B" -f $_.Size
                                 }
                              </ScriptBlock>
+                            </ListItem>
+                            <ListItem>
+                             <PropertyName>FileCount</PropertyName>
+                            </ListItem>
+                            <ListItem>
+                             <PropertyName>DirectoryCount</PropertyName>
                             </ListItem>
                             <ListItem>
                              <PropertyName>IsDirectory</PropertyName>

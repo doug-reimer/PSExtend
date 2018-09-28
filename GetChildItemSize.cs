@@ -60,9 +60,11 @@ namespace PSExtend
         }
 
 
-        private long GetDirectorySize(string Path)
+        private (long DirectorySize, long FileCount, long DirectoryCount) GetDirectorySize(string Path)
         {
             long directorySize = 0;
+            long fileCount = 0;
+            long directoryCount = 0;
             DirectoryInfo directoryInfo = new DirectoryInfo(Path);
 
             try
@@ -73,13 +75,17 @@ namespace PSExtend
                 {
                     System.Threading.Interlocked.Add(ref directorySize, file.Length);
                 }
+                System.Threading.Interlocked.Add(ref fileCount, files.Length);
 
                 DirectoryInfo[] directories = directoryInfo.GetDirectories();
+                System.Threading.Interlocked.Add(ref directoryCount, directories.Length);
 
                 System.Threading.Tasks.Parallel.ForEach(directories, (subDir) => {
                     
-                    long size = GetDirectorySize(subDir.FullName);
-                    System.Threading.Interlocked.Add(ref directorySize, size);
+                    var DirSizeInfo = GetDirectorySize(subDir.FullName);
+                    System.Threading.Interlocked.Add(ref directorySize, DirSizeInfo.DirectorySize);
+                    System.Threading.Interlocked.Add(ref fileCount, DirSizeInfo.FileCount);
+                    System.Threading.Interlocked.Add(ref directoryCount, DirSizeInfo.DirectoryCount);
                 });
             }
             catch (System.UnauthorizedAccessException)
@@ -96,7 +102,7 @@ namespace PSExtend
             }
             
 
-            return directorySize;
+            return (DirectorySize: directorySize, FileCount: fileCount, DirectoryCount: directoryCount);
         }
 
         private IList<FileSystemInfo> GetChildDirectories(string Path)
@@ -108,14 +114,16 @@ namespace PSExtend
                 DirectoryInfo[] directories = directoryInfo.GetDirectories();
 
                 System.Threading.Tasks.Parallel.ForEach(directories, (subdir) => {
-                    long size = GetDirectorySize(subdir.FullName);
+                    var DirSizeInfo = GetDirectorySize(subdir.FullName);
                     
-                    if (size >= 0)
+                    if (DirSizeInfo.DirectorySize >= 0)
                     {
                         directoryList.Add(new FileSystemInfo {
                             FullName = subdir.FullName,
                             Name = subdir.Name,
-                            Size = size,
+                            Size = DirSizeInfo.DirectorySize,
+                            FileCount = DirSizeInfo.FileCount,
+                            DirectoryCount = DirSizeInfo.DirectoryCount,
                             IsDirectory = true
                         });
                     }
