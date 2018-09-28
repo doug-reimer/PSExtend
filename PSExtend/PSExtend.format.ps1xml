@@ -29,16 +29,30 @@
                             </TableColumnItem>
                             <TableColumnItem>
                                 <ScriptBlock>
-                                    if ($_.Size -gt 1tb) {
-                                        "{0:N3} TB" -f ([double]$_.Size / 1tb)
-                                    } elseif ($_.Size -gt 1gb) {
-                                        "{0:N3} GB" -f ([double]$_.Size / 1gb)
-                                    } elseif ($_.Size -gt 1mb) {
-                                        "{0:N3} MB" -f ([double]$_.Size / 1mb)
-                                    } elseif ($_.Size -gt 1kb) {
-                                        "{0:N3} KB" -f ([double]$_.Size / 1kb)
+                                    if ($IsMacOs) {
+                                        if ($_.Size -gt 1tb) {
+                                            "{0:N3} TB" -f ([double]$_.Size / 1000000000000)
+                                        } elseif ($_.Size -gt 1gb) {
+                                            "{0:N3} GB" -f ([double]$_.Size / 1000000000)
+                                        } elseif ($_.Size -gt 1mb) {
+                                            "{0:N3} MB" -f ([double]$_.Size / 1000000)
+                                        } elseif ($_.Size -gt 1kb) {
+                                            "{0:N3} KB" -f ([double]$_.Size / 1000)
+                                        } else {
+                                            "{0:N0} B" -f $_.Size
+                                        }
                                     } else {
-                                        "{0:N0} B" -f $_.Size
+                                        if ($_.Size -gt 1tb) {
+                                            "{0:N3} TB" -f ([double]$_.Size / 1tb)
+                                        } elseif ($_.Size -gt 1gb) {
+                                            "{0:N3} GB" -f ([double]$_.Size / 1gb)
+                                        } elseif ($_.Size -gt 1mb) {
+                                            "{0:N3} MB" -f ([double]$_.Size / 1mb)
+                                        } elseif ($_.Size -gt 1kb) {
+                                            "{0:N3} KB" -f ([double]$_.Size / 1kb)
+                                        } else {
+                                            "{0:N0} B" -f $_.Size
+                                        }
                                     }
                                 </ScriptBlock>
                             </TableColumnItem>
@@ -71,16 +85,30 @@
                             <ListItem>
                              <Label>Size</Label>
                              <ScriptBlock>
-                                if ($_.Size -gt 1tb) {
-                                    "{0:N3} TB" -f ([double]$_.Size / 1tb)
-                                } elseif ($_.Size -gt 1gb) {
-                                    "{0:N3} GB" -f ([double]$_.Size / 1gb)
-                                } elseif ($_.Size -gt 1mb) {
-                                    "{0:N3} MB" -f ([double]$_.Size / 1mb)
-                                } elseif ($_.Size -gt 1kb) {
-                                    "{0:N3} KB" -f ([double]$_.Size / 1kb)
+                                if ($IsMacOs) {
+                                    if ($_.Size -gt 1tb) {
+                                        "{0:N3} TB" -f ([double]$_.Size / 1000000000000)
+                                    } elseif ($_.Size -gt 1gb) {
+                                        "{0:N3} GB" -f ([double]$_.Size / 1000000000)
+                                    } elseif ($_.Size -gt 1mb) {
+                                        "{0:N3} MB" -f ([double]$_.Size / 1000000)
+                                    } elseif ($_.Size -gt 1kb) {
+                                        "{0:N3} KB" -f ([double]$_.Size / 1000)
+                                    } else {
+                                        "{0:N0} B" -f $_.Size
+                                    }
                                 } else {
-                                    "{0:N0} B" -f $_.Size
+                                    if ($_.Size -gt 1tb) {
+                                        "{0:N3} TB" -f ([double]$_.Size / 1tb)
+                                    } elseif ($_.Size -gt 1gb) {
+                                        "{0:N3} GB" -f ([double]$_.Size / 1gb)
+                                    } elseif ($_.Size -gt 1mb) {
+                                        "{0:N3} MB" -f ([double]$_.Size / 1mb)
+                                    } elseif ($_.Size -gt 1kb) {
+                                        "{0:N3} KB" -f ([double]$_.Size / 1kb)
+                                    } else {
+                                        "{0:N0} B" -f $_.Size
+                                    }
                                 }
                              </ScriptBlock>
                             </ListItem>

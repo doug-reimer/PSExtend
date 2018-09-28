@@ -8,9 +8,9 @@ using System.Linq;
 
 namespace PSExtend
 {
-    [Cmdlet(VerbsCommon.Get, "ChildItemSize")]
+    [Cmdlet(VerbsCommon.Get, "DirectorySize")]
     [OutputType(typeof(FileSystemInfo))]
-    public class GetChildItemSizeCommand : PSCmdlet
+    public class GetDirectorySizeCommand : PSCmdlet
     {
         [Parameter(
             Mandatory = false,
@@ -24,8 +24,7 @@ namespace PSExtend
         {
             return CurrentProviderLocation("FileSystem").ProviderPath;
         }
-        // This method gets called once for each cmdlet in the pipeline when the 
-        // pipeline starts executing
+
         protected override void BeginProcessing()
         {
             WriteVerbose("Begin!");
@@ -50,25 +49,19 @@ namespace PSExtend
                 {
                     WriteObject(dir);
                 }
-
-                foreach (FileSystemInfo file in GetChildFiles(Path))
-                {
-                    WriteObject(file);
-                }
             }
             else
             {
                 FileInfo file = new FileInfo(Path);
                 WriteObject(new FileSystemInfo {
-                    FullName = file.FullName,
-                    Name = file.Name,
-                    Size = file.Length,
-                    IsDirectory = false
-                });
+                        FullName = file.FullName,
+                        Name = file.Name,
+                        Size = file.Length,
+                        IsDirectory = false
+                    });
             }
             
         }
-
 
         private (long DirectorySize, long FileCount, long DirectoryCount) GetDirectorySize(string Path)
         {
@@ -120,25 +113,21 @@ namespace PSExtend
             DirectoryInfo directoryInfo = new DirectoryInfo(Path);
             IList<FileSystemInfo> directoryList = new List<FileSystemInfo>();
 
-            try {
-                DirectoryInfo[] directories = directoryInfo.GetDirectories();
-
-                System.Threading.Tasks.Parallel.ForEach(directories, (subdir) => {
-                    var DirSizeInfo = GetDirectorySize(subdir.FullName);
+            try
+            {
+                var DirSizeInfo = GetDirectorySize(directoryInfo.FullName);
                     
                     if (DirSizeInfo.DirectorySize >= 0)
                     {
                         directoryList.Add(new FileSystemInfo {
-                            FullName = subdir.FullName,
-                            Name = subdir.Name,
+                            FullName = directoryInfo.FullName,
+                            Name = directoryInfo.Name,
                             Size = DirSizeInfo.DirectorySize,
                             FileCount = DirSizeInfo.FileCount,
                             DirectoryCount = DirSizeInfo.DirectoryCount,
                             IsDirectory = true
                         });
                     }
-                    
-                });
             }
             catch (System.UnauthorizedAccessException UAex)
             {
