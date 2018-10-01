@@ -51,7 +51,7 @@ namespace PSExtend
                     WriteObject(dir);
                 }
 
-                foreach (FileSystemInfo file in GetChildFiles(Path))
+                foreach (FileSystemInfo file in Util.GetChildFiles(Path))
                 {
                     WriteObject(file);
                 }
@@ -69,52 +69,6 @@ namespace PSExtend
             
         }
 
-
-        private (long DirectorySize, long FileCount, long DirectoryCount) GetDirectorySize(string Path)
-        {
-            long directorySize = 0;
-            long fileCount = 0;
-            long directoryCount = 0;
-            DirectoryInfo directoryInfo = new DirectoryInfo(Path);
-
-            try
-            {
-                FileInfo[] files = directoryInfo.GetFiles();
-
-                foreach (FileInfo file in files)
-                {
-                    System.Threading.Interlocked.Add(ref directorySize, file.Length);
-                }
-                System.Threading.Interlocked.Add(ref fileCount, files.Length);
-
-                DirectoryInfo[] directories = directoryInfo.GetDirectories();
-                System.Threading.Interlocked.Add(ref directoryCount, directories.Length);
-
-                System.Threading.Tasks.Parallel.ForEach(directories, (subDir) => {
-                    
-                    var DirSizeInfo = GetDirectorySize(subDir.FullName);
-                    System.Threading.Interlocked.Add(ref directorySize, DirSizeInfo.DirectorySize);
-                    System.Threading.Interlocked.Add(ref fileCount, DirSizeInfo.FileCount);
-                    System.Threading.Interlocked.Add(ref directoryCount, DirSizeInfo.DirectoryCount);
-                });
-            }
-            catch (System.UnauthorizedAccessException)
-            {
-                directorySize = -1;
-            }
-            catch (System.IO.PathTooLongException)
-            {
-                directorySize = -1;
-            }
-            catch (System.AggregateException)
-            {
-                directorySize = -1;
-            }
-            
-
-            return (DirectorySize: directorySize, FileCount: fileCount, DirectoryCount: directoryCount);
-        }
-
         private IList<FileSystemInfo> GetChildDirectories(string Path)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(Path);
@@ -124,7 +78,7 @@ namespace PSExtend
                 DirectoryInfo[] directories = directoryInfo.GetDirectories();
 
                 System.Threading.Tasks.Parallel.ForEach(directories, (subdir) => {
-                    var DirSizeInfo = GetDirectorySize(subdir.FullName);
+                    var DirSizeInfo = Util.GetDirectorySize(subdir.FullName);
                     
                     if (DirSizeInfo.DirectorySize >= 0)
                     {
@@ -156,31 +110,6 @@ namespace PSExtend
             return directoryList;
         }
 
-        private IList<FileSystemInfo> GetChildFiles(string Path)
-        {
-            DirectoryInfo directoryInfo = new DirectoryInfo(Path);
-            IList<FileSystemInfo> fileList = new List<FileSystemInfo>();
-
-            try {
-                FileInfo[] files = directoryInfo.GetFiles();
-
-                foreach (FileInfo file in files)
-                {
-                    fileList.Add(new FileSystemInfo {
-                        FullName = System.IO.Path.Combine(Path, file.Name),
-                        Name = file.Name,
-                        Size = file.Length,
-                        IsDirectory = false
-                    });
-                }
-            }
-            catch (System.UnauthorizedAccessException UAex)
-            {
-                WriteWarning(UAex.Message);
-            }
-            
-            return fileList;
-        }
 
         // This method will be called once at the end of pipeline execution; 
         // if no input is received, this method is not called
