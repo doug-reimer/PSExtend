@@ -44,15 +44,28 @@ namespace PSExtend
             
             if ((attributes & FileAttributes.Directory) == FileAttributes.Directory)
             {
-                IEnumerable<FileSystemInfo> childDirs = Util.GetChildDirectories(Path).AsEnumerable();
+                var childDirInfo = Util.GetChildDirectories(Path);
+
+                IEnumerable<FileSystemInfo> childDirs = childDirInfo.fs_info;
                 IList childDirList = childDirs.OrderBy(n => n.Name).ToList();
+
+                foreach (Exception ex in childDirInfo.exceptions)
+                {
+                    WriteWarning(ex.Message);
+                }
 
                 foreach (FileSystemInfo dir in childDirList)
                 {
                     WriteObject(dir);
                 }
 
-                foreach (FileSystemInfo file in Util.GetChildFiles(Path))
+                var fileInfo = Util.GetChildFiles(Path);
+                foreach (Exception ex in fileInfo.exceptions)
+                {
+                    WriteWarning(ex.Message);
+                }
+
+                foreach (FileSystemInfo file in fileInfo.fs_info)
                 {
                     WriteObject(file);
                 }
