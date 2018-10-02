@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Linq;
+using PSExtend.Directory;
 
 namespace PSExtend
 {
@@ -43,7 +44,7 @@ namespace PSExtend
             
             if ((attributes & FileAttributes.Directory) == FileAttributes.Directory)
             {
-                IEnumerable<FileSystemInfo> childDirs = GetChildDirectories(Path).AsEnumerable();
+                IEnumerable<FileSystemInfo> childDirs = Util.GetChildDirectories(Path).AsEnumerable();
                 IList childDirList = childDirs.OrderBy(n => n.Name).ToList();
 
                 foreach (FileSystemInfo dir in childDirList)
@@ -68,48 +69,6 @@ namespace PSExtend
             }
             
         }
-
-        private IList<FileSystemInfo> GetChildDirectories(string Path)
-        {
-            DirectoryInfo directoryInfo = new DirectoryInfo(Path);
-            IList<FileSystemInfo> directoryList = new List<FileSystemInfo>();
-
-            try {
-                DirectoryInfo[] directories = directoryInfo.GetDirectories();
-
-                System.Threading.Tasks.Parallel.ForEach(directories, (subdir) => {
-                    var DirSizeInfo = Util.GetDirectorySize(subdir.FullName);
-                    
-                    if (DirSizeInfo.DirectorySize >= 0)
-                    {
-                        directoryList.Add(new FileSystemInfo {
-                            FullName = subdir.FullName,
-                            Name = subdir.Name,
-                            Size = DirSizeInfo.DirectorySize,
-                            FileCount = DirSizeInfo.FileCount,
-                            DirectoryCount = DirSizeInfo.DirectoryCount,
-                            IsDirectory = true
-                        });
-                    }
-                    
-                });
-            }
-            catch (System.UnauthorizedAccessException UAex)
-            {
-                WriteWarning(UAex.Message);
-            }
-            catch (System.IO.PathTooLongException PTLex)
-            {
-                WriteWarning(PTLex.Message);
-            }
-            catch (System.AggregateException Aex)
-            {
-                WriteWarning(Aex.Message);
-            }
-            
-            return directoryList;
-        }
-
 
         // This method will be called once at the end of pipeline execution; 
         // if no input is received, this method is not called
