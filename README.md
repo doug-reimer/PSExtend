@@ -1,13 +1,16 @@
 # PSExtensions
 
-This module contains Cmdlets that extend functionality within PowerShell.
+A cross-platform module containing Cmdlets that extend functionality within PowerShell.
 
 ### Cmdlets
 ```powershell
-Get-ChildItemSize
-
-Get-DirectorySize
+Get-ChildItemSize [[-Path] <String>] [<CommonParameters>]
 ```
+A multi-threaded cmdlet to retrieve file and directory sizes.
+```powershell
+Get-DirectorySize [[-Path] <String>] [<CommonParameters>]
+```
+A multi-threaded cmdlet to retrieve the size of a specified directory.
 
 ### Installation
 Copy the PSExtend directory from this repository to the PowerShell module path:
@@ -18,6 +21,30 @@ $env:PSModulePath
 Import the PSExtend module:
 ```powershell
 Import-Module PSExtend
+```
+
+### Examples
+```powershell
+PS C:\> Get-DirectorySize -Path C:\Temp\Applications
+```
+```
+Name          Size     FileCount DirectoryCount
+----          ----     --------- --------------
+Applications  3.806 GB 11        5             
+```
+
+```powershell
+PS C:\> Get-ChildItemSize -Path /tmp
+```
+```
+Name          Size       FileCount DirectoryCount
+----          ----       --------- --------------
+CM13          499.183 MB 2         0             
+Images        1.225 GB   3         0             
+LineageOS     490.955 MB 1         0             
+OpenApps      1.545 GB   2         0             
+RecoveryIMG   45.249 MB  2         0             
+notes.txt     10.244 KB                          
 ```
 
 ### Build Instructions
