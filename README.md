@@ -37,7 +37,7 @@ Import-Module PSExtend
 New-MarkdownHelp -Module PSExtend -OutputFolder .\Help
 ```
 
-Modify the generated markdown files, replacing the "{{ ... }}" placeholders with help content.
+Modify the generated markdown files, replacing the `"{{ ... }}"` placeholders with help content.
 
 Generate the help files: 
 ```powershell
