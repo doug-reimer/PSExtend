@@ -37,7 +37,7 @@ This command gets the sizes of the child items under the C:\Temp directory.
 
 ### Example 3
 ```powershell
-PS C:\> Get-ChildItemSize /Users/Guest
+PS /Users/Demo> Get-ChildItemSize /Users/Demo
 ```
 
 This command gets the sizes of the child items under the /Users/Guest directory.

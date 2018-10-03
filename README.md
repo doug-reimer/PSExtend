@@ -34,7 +34,7 @@ Applications  3.806 GB 11        5
 ```
 
 ```powershell
-PS C:\> Get-ChildItemSize -Path /tmp
+PS /Users/Demo> Get-ChildItemSize -Path /Users/Demo/Workspace
 ```
 ```
 Name          Size       FileCount DirectoryCount

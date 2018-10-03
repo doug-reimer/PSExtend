@@ -85,7 +85,7 @@
       </command:example>
       <command:example>
         <maml:title>-------------------------- Example 3 --------------------------</maml:title>
-        <dev:code>PS C:\&gt; Get-ChildItemSize /Users/Guest</dev:code>
+        <dev:code>PS /Users/Demo&gt; Get-ChildItemSize /Users/Demo</dev:code>
         <dev:remarks>
           <maml:para>This command gets the sizes of the child items under the /Users/Guest directory.</maml:para>
         </dev:remarks>
