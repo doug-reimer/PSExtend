@@ -41,7 +41,7 @@ Modify the generated markdown files, replacing the `"{{ ... }}"` placeholders wi
 
 Generate the help files: 
 ```powershell
-New-ExternalHelp .\docs -OutputPath en-US\
+New-ExternalHelp .\Help -OutputPath en-US\
 ```
 
 #### Build
