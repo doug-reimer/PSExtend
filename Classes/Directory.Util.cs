@@ -35,7 +35,7 @@ namespace PSExtend.Directory
             return (fsInfo: fileList, exceptions: exceptions);
         }
 
-        public static (DirectorySizeInfo sizeInfo, ConcurrentQueue<Exception> exceptions) GetDirectorySize(string Path)
+        public static (DirectorySizeInfo dsInfo, ConcurrentQueue<Exception> exceptions) GetDirectorySize(string Path)
         {
             long directorySize = 0;
             long fileCount = 0;
@@ -73,10 +73,10 @@ namespace PSExtend.Directory
                         {
                             exceptions.Enqueue(exception);
                         }
-                        System.Threading.Interlocked.Add(ref directorySize, DirSizeInfo.sizeInfo.DirectorySize);
-                        System.Threading.Interlocked.Add(ref fileCount, DirSizeInfo.sizeInfo.FileCount);
-                        System.Threading.Interlocked.Add(ref directoryCount, DirSizeInfo.sizeInfo.DirectoryCount);
-                        System.Threading.Interlocked.Add(ref reparsePointCount, DirSizeInfo.sizeInfo.ReparsePointCount);
+                        System.Threading.Interlocked.Add(ref directorySize, DirSizeInfo.dsInfo.DirectorySize);
+                        System.Threading.Interlocked.Add(ref fileCount, DirSizeInfo.dsInfo.FileCount);
+                        System.Threading.Interlocked.Add(ref directoryCount, DirSizeInfo.dsInfo.DirectoryCount);
+                        System.Threading.Interlocked.Add(ref reparsePointCount, DirSizeInfo.dsInfo.ReparsePointCount);
                     }
                     
                 });
@@ -101,7 +101,7 @@ namespace PSExtend.Directory
                 ReparsePointCount = reparsePointCount
             };
             
-            return (sizeInfo: sizeInfo, exceptions: exceptions);
+            return (dsInfo: sizeInfo, exceptions: exceptions);
         }
 
         public static (IList<FileSystemInfo> fsInfo, ConcurrentQueue<Exception> exceptions) GetCurrentDirectories(string Path)
@@ -111,16 +111,16 @@ namespace PSExtend.Directory
 
             var dirSizeInfo = Util.GetDirectorySize(directoryInfo.FullName);
                 
-            if (dirSizeInfo.sizeInfo.DirectorySize >= 0)
+            if (dirSizeInfo.dsInfo.DirectorySize >= 0)
             {
                 directoryList.Add(new FileSystemInfo {
                     FullName = directoryInfo.FullName,
                     Name = directoryInfo.Name,
-                    Size = dirSizeInfo.sizeInfo.DirectorySize,
-                    FileCount = dirSizeInfo.sizeInfo.FileCount,
-                    DirectoryCount = dirSizeInfo.sizeInfo.DirectoryCount,
+                    Size = dirSizeInfo.dsInfo.DirectorySize,
+                    FileCount = dirSizeInfo.dsInfo.FileCount,
+                    DirectoryCount = dirSizeInfo.dsInfo.DirectoryCount,
                     IsDirectory = true,
-                    ReparsePointCount = dirSizeInfo.sizeInfo.ReparsePointCount
+                    ReparsePointCount = dirSizeInfo.dsInfo.ReparsePointCount
                 });
             }
             
@@ -144,16 +144,16 @@ namespace PSExtend.Directory
                         exceptions.Enqueue(exception);
                     }
                     
-                    if (DirSizeInfo.sizeInfo.DirectorySize >= 0)
+                    if (DirSizeInfo.dsInfo.DirectorySize >= 0)
                     {
                         directoryList.Add(new FileSystemInfo {
                             FullName = subdir.FullName,
                             Name = subdir.Name,
-                            Size = DirSizeInfo.sizeInfo.DirectorySize,
-                            FileCount = DirSizeInfo.sizeInfo.FileCount,
-                            DirectoryCount = DirSizeInfo.sizeInfo.DirectoryCount,
+                            Size = DirSizeInfo.dsInfo.DirectorySize,
+                            FileCount = DirSizeInfo.dsInfo.FileCount,
+                            DirectoryCount = DirSizeInfo.dsInfo.DirectoryCount,
                             IsDirectory = true,
-                            ReparsePointCount = DirSizeInfo.sizeInfo.ReparsePointCount
+                            ReparsePointCount = DirSizeInfo.dsInfo.ReparsePointCount
                         });
                     }
                 });
