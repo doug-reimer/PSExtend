@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="*.format.ps1xml;*.psd1" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="*.format.ps1xml;*.psd1;en-US\**" CopyToOutputDirectory="PreserveNewest" />
     <!-- CopyToOutputDirectory = { Always, PreserveNewest, Never } -->
   </ItemGroup>
 
