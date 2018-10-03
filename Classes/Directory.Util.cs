@@ -68,15 +68,15 @@ namespace PSExtend.Directory
                         System.Threading.Interlocked.Add(ref reparsePointCount, 1);
                     }
                     else {
-                        var DirSizeInfo = GetDirectorySize(subDir.FullName);
-                        foreach (Exception exception in DirSizeInfo.exceptions)
+                        var dirSizeInfo = GetDirectorySize(subDir.FullName);
+                        foreach (Exception exception in dirSizeInfo.exceptions)
                         {
                             exceptions.Enqueue(exception);
                         }
-                        System.Threading.Interlocked.Add(ref directorySize, DirSizeInfo.dsInfo.DirectorySize);
-                        System.Threading.Interlocked.Add(ref fileCount, DirSizeInfo.dsInfo.FileCount);
-                        System.Threading.Interlocked.Add(ref directoryCount, DirSizeInfo.dsInfo.DirectoryCount);
-                        System.Threading.Interlocked.Add(ref reparsePointCount, DirSizeInfo.dsInfo.ReparsePointCount);
+                        System.Threading.Interlocked.Add(ref directorySize, dirSizeInfo.dsInfo.DirectorySize);
+                        System.Threading.Interlocked.Add(ref fileCount, dirSizeInfo.dsInfo.FileCount);
+                        System.Threading.Interlocked.Add(ref directoryCount, dirSizeInfo.dsInfo.DirectoryCount);
+                        System.Threading.Interlocked.Add(ref reparsePointCount, dirSizeInfo.dsInfo.ReparsePointCount);
                     }
                     
                 });
@@ -109,7 +109,7 @@ namespace PSExtend.Directory
             DirectoryInfo directoryInfo = new DirectoryInfo(Path);
             IList<FileSystemInfo> directoryList = new List<FileSystemInfo>();
 
-            var dirSizeInfo = Util.GetDirectorySize(directoryInfo.FullName);
+            var dirSizeInfo = GetDirectorySize(directoryInfo.FullName);
                 
             if (dirSizeInfo.dsInfo.DirectorySize >= 0)
             {
@@ -138,22 +138,22 @@ namespace PSExtend.Directory
                 DirectoryInfo[] directories = directoryInfo.GetDirectories();
 
                 System.Threading.Tasks.Parallel.ForEach(directories, (subdir) => {
-                    var DirSizeInfo = Util.GetDirectorySize(subdir.FullName);
-                    foreach (Exception exception in DirSizeInfo.exceptions)
+                    var dirSizeInfo = GetDirectorySize(subdir.FullName);
+                    foreach (Exception exception in dirSizeInfo.exceptions)
                     {
                         exceptions.Enqueue(exception);
                     }
                     
-                    if (DirSizeInfo.dsInfo.DirectorySize >= 0)
+                    if (dirSizeInfo.dsInfo.DirectorySize >= 0)
                     {
                         directoryList.Add(new FileSystemInfo {
                             FullName = subdir.FullName,
                             Name = subdir.Name,
-                            Size = DirSizeInfo.dsInfo.DirectorySize,
-                            FileCount = DirSizeInfo.dsInfo.FileCount,
-                            DirectoryCount = DirSizeInfo.dsInfo.DirectoryCount,
+                            Size = dirSizeInfo.dsInfo.DirectorySize,
+                            FileCount = dirSizeInfo.dsInfo.FileCount,
+                            DirectoryCount = dirSizeInfo.dsInfo.DirectoryCount,
                             IsDirectory = true,
-                            ReparsePointCount = DirSizeInfo.dsInfo.ReparsePointCount
+                            ReparsePointCount = dirSizeInfo.dsInfo.ReparsePointCount
                         });
                     }
                 });
