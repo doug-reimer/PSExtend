@@ -45,7 +45,7 @@ namespace PSExtend
             {
                 var childDirInfo = Directory.Util.GetChildDirectories(Path);
 
-                IEnumerable<FileSystemInfo> childDirs = childDirInfo.fs_info;
+                IEnumerable<FileSystemInfo> childDirs = childDirInfo.fsInfo;
                 IList childDirList = childDirs.OrderBy(n => n.Name).ToList();
 
                 foreach (Exception ex in childDirInfo.exceptions)
@@ -64,7 +64,7 @@ namespace PSExtend
                     WriteWarning(ex.Message);
                 }
 
-                foreach (FileSystemInfo file in fileInfo.fs_info)
+                foreach (FileSystemInfo file in fileInfo.fsInfo)
                 {
                     WriteObject(file);
                 }

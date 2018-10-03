@@ -44,7 +44,7 @@ namespace PSExtend
             {
                 var childDirInfo = Directory.Util.GetCurrentDirectories(Path);
                 
-                IEnumerable<FileSystemInfo> childDirs = childDirInfo.fs_info;
+                IEnumerable<FileSystemInfo> childDirs = childDirInfo.fsInfo;
                 IList childDirList = childDirs.OrderBy(n => n.Name).ToList();
 
                 foreach (Exception ex in childDirInfo.exceptions)

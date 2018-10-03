@@ -8,7 +8,7 @@ namespace PSExtend.Directory
     public static class Util
     {
 
-        public static (IList<FileSystemInfo> fs_info, List<Exception> exceptions) GetChildFiles(string Path)
+        public static (IList<FileSystemInfo> fsInfo, List<Exception> exceptions) GetChildFiles(string Path)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(Path);
             IList<FileSystemInfo> fileList = new List<FileSystemInfo>();
@@ -32,10 +32,10 @@ namespace PSExtend.Directory
                 exceptions.Add(UAex);
             }
             
-            return (fs_info: fileList, exceptions: exceptions);
+            return (fsInfo: fileList, exceptions: exceptions);
         }
 
-        public static (DirectorySizeInfo SizeInfo, ConcurrentQueue<Exception> exceptions) GetDirectorySize(string Path)
+        public static (DirectorySizeInfo sizeInfo, ConcurrentQueue<Exception> exceptions) GetDirectorySize(string Path)
         {
             long directorySize = 0;
             long fileCount = 0;
@@ -73,10 +73,10 @@ namespace PSExtend.Directory
                         {
                             exceptions.Enqueue(exception);
                         }
-                        System.Threading.Interlocked.Add(ref directorySize, DirSizeInfo.SizeInfo.DirectorySize);
-                        System.Threading.Interlocked.Add(ref fileCount, DirSizeInfo.SizeInfo.FileCount);
-                        System.Threading.Interlocked.Add(ref directoryCount, DirSizeInfo.SizeInfo.DirectoryCount);
-                        System.Threading.Interlocked.Add(ref reparsePointCount, DirSizeInfo.SizeInfo.ReparsePointCount);
+                        System.Threading.Interlocked.Add(ref directorySize, DirSizeInfo.sizeInfo.DirectorySize);
+                        System.Threading.Interlocked.Add(ref fileCount, DirSizeInfo.sizeInfo.FileCount);
+                        System.Threading.Interlocked.Add(ref directoryCount, DirSizeInfo.sizeInfo.DirectoryCount);
+                        System.Threading.Interlocked.Add(ref reparsePointCount, DirSizeInfo.sizeInfo.ReparsePointCount);
                     }
                     
                 });
@@ -101,33 +101,33 @@ namespace PSExtend.Directory
                 ReparsePointCount = reparsePointCount
             };
             
-            return (SizeInfo: sizeInfo, exceptions: exceptions);
+            return (sizeInfo: sizeInfo, exceptions: exceptions);
         }
 
-        public static (IList<FileSystemInfo> fs_info, ConcurrentQueue<Exception> exceptions) GetCurrentDirectories(string Path)
+        public static (IList<FileSystemInfo> fsInfo, ConcurrentQueue<Exception> exceptions) GetCurrentDirectories(string Path)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(Path);
             IList<FileSystemInfo> directoryList = new List<FileSystemInfo>();
 
             var dirSizeInfo = Util.GetDirectorySize(directoryInfo.FullName);
                 
-            if (dirSizeInfo.SizeInfo.DirectorySize >= 0)
+            if (dirSizeInfo.sizeInfo.DirectorySize >= 0)
             {
                 directoryList.Add(new FileSystemInfo {
                     FullName = directoryInfo.FullName,
                     Name = directoryInfo.Name,
-                    Size = dirSizeInfo.SizeInfo.DirectorySize,
-                    FileCount = dirSizeInfo.SizeInfo.FileCount,
-                    DirectoryCount = dirSizeInfo.SizeInfo.DirectoryCount,
+                    Size = dirSizeInfo.sizeInfo.DirectorySize,
+                    FileCount = dirSizeInfo.sizeInfo.FileCount,
+                    DirectoryCount = dirSizeInfo.sizeInfo.DirectoryCount,
                     IsDirectory = true,
-                    ReparsePointCount = dirSizeInfo.SizeInfo.ReparsePointCount
+                    ReparsePointCount = dirSizeInfo.sizeInfo.ReparsePointCount
                 });
             }
             
-            return (fs_info: directoryList, exceptions: dirSizeInfo.exceptions);
+            return (fsInfo: directoryList, exceptions: dirSizeInfo.exceptions);
         }
 
-        public static (IList<FileSystemInfo> fs_info, ConcurrentQueue<Exception> exceptions) GetChildDirectories(string Path)
+        public static (IList<FileSystemInfo> fsInfo, ConcurrentQueue<Exception> exceptions) GetChildDirectories(string Path)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(Path);
             IList<FileSystemInfo> directoryList = new List<FileSystemInfo>();
@@ -144,16 +144,16 @@ namespace PSExtend.Directory
                         exceptions.Enqueue(exception);
                     }
                     
-                    if (DirSizeInfo.SizeInfo.DirectorySize >= 0)
+                    if (DirSizeInfo.sizeInfo.DirectorySize >= 0)
                     {
                         directoryList.Add(new FileSystemInfo {
                             FullName = subdir.FullName,
                             Name = subdir.Name,
-                            Size = DirSizeInfo.SizeInfo.DirectorySize,
-                            FileCount = DirSizeInfo.SizeInfo.FileCount,
-                            DirectoryCount = DirSizeInfo.SizeInfo.DirectoryCount,
+                            Size = DirSizeInfo.sizeInfo.DirectorySize,
+                            FileCount = DirSizeInfo.sizeInfo.FileCount,
+                            DirectoryCount = DirSizeInfo.sizeInfo.DirectoryCount,
                             IsDirectory = true,
-                            ReparsePointCount = DirSizeInfo.SizeInfo.ReparsePointCount
+                            ReparsePointCount = DirSizeInfo.sizeInfo.ReparsePointCount
                         });
                     }
                 });
@@ -171,7 +171,7 @@ namespace PSExtend.Directory
                 exceptions.Enqueue(Aex);
             }
             
-            return (fs_info: directoryList, exceptions: exceptions);
+            return (fsInfo: directoryList, exceptions: exceptions);
         }
 
     }
