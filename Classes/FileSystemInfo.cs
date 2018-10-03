@@ -8,5 +8,6 @@ namespace PSExtend
         public long? FileCount { get; set; }
         public long? DirectoryCount {get; set; }
         public bool IsDirectory { get; set; }
+        public long? ReparsePointCount { get; set; }
     }
 }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Linq;
-using PSExtend.Directory;
 
 namespace PSExtend
 {
@@ -43,7 +42,7 @@ namespace PSExtend
             
             if ((attributes & FileAttributes.Directory) == FileAttributes.Directory)
             {
-                var childDirInfo = Util.GetCurrentDirectories(Path);
+                var childDirInfo = Directory.Util.GetCurrentDirectories(Path);
                 
                 IEnumerable<FileSystemInfo> childDirs = childDirInfo.fs_info;
                 IList childDirList = childDirs.OrderBy(n => n.Name).ToList();

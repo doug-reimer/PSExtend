@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using System.Linq;
-using PSExtend.Directory;
+// using PSExtend.Directory;
 
 namespace PSExtend
 {
@@ -44,7 +44,7 @@ namespace PSExtend
             
             if ((attributes & FileAttributes.Directory) == FileAttributes.Directory)
             {
-                var childDirInfo = Util.GetChildDirectories(Path);
+                var childDirInfo = Directory.Util.GetChildDirectories(Path);
 
                 IEnumerable<FileSystemInfo> childDirs = childDirInfo.fs_info;
                 IList childDirList = childDirs.OrderBy(n => n.Name).ToList();
@@ -59,7 +59,7 @@ namespace PSExtend
                     WriteObject(dir);
                 }
 
-                var fileInfo = Util.GetChildFiles(Path);
+                var fileInfo = Directory.Util.GetChildFiles(Path);
                 foreach (Exception ex in fileInfo.exceptions)
                 {
                     WriteWarning(ex.Message);

@@ -40,6 +40,7 @@ namespace PSExtend.Directory
             long directorySize = 0;
             long fileCount = 0;
             long directoryCount = 0;
+            long reparsePointCount = 0;
             DirectoryInfo directoryInfo = new DirectoryInfo(Path);
 
             // Use ConcurrentQueue to enable safe enqueueing from multiple threads.
@@ -60,15 +61,23 @@ namespace PSExtend.Directory
                 System.Threading.Interlocked.Add(ref directoryCount, directories.Length);
 
                 System.Threading.Tasks.Parallel.ForEach(directories, (subDir) => {
+                    FileAttributes attributes = System.IO.File.GetAttributes(subDir.FullName);
                     
-                    var DirSizeInfo = GetDirectorySize(subDir.FullName);
-                    foreach (Exception exception in DirSizeInfo.exceptions)
+                    if ((attributes & FileAttributes.ReparsePoint) == FileAttributes.ReparsePoint)
                     {
-                        exceptions.Enqueue(exception);
+                        System.Threading.Interlocked.Add(ref reparsePointCount, 1);
                     }
-                    System.Threading.Interlocked.Add(ref directorySize, DirSizeInfo.SizeInfo.DirectorySize);
-                    System.Threading.Interlocked.Add(ref fileCount, DirSizeInfo.SizeInfo.FileCount);
-                    System.Threading.Interlocked.Add(ref directoryCount, DirSizeInfo.SizeInfo.DirectoryCount);
+                    else {
+                        var DirSizeInfo = GetDirectorySize(subDir.FullName);
+                        foreach (Exception exception in DirSizeInfo.exceptions)
+                        {
+                            exceptions.Enqueue(exception);
+                        }
+                        System.Threading.Interlocked.Add(ref directorySize, DirSizeInfo.SizeInfo.DirectorySize);
+                        System.Threading.Interlocked.Add(ref fileCount, DirSizeInfo.SizeInfo.FileCount);
+                        System.Threading.Interlocked.Add(ref directoryCount, DirSizeInfo.SizeInfo.DirectoryCount);
+                        System.Threading.Interlocked.Add(ref reparsePointCount, DirSizeInfo.SizeInfo.ReparsePointCount);
+                    }
                     
                 });
             }
@@ -88,7 +97,8 @@ namespace PSExtend.Directory
             DirectorySizeInfo sizeInfo = new DirectorySizeInfo {
                 DirectorySize = directorySize,
                 FileCount = fileCount,
-                DirectoryCount = directoryCount
+                DirectoryCount = directoryCount,
+                ReparsePointCount = reparsePointCount
             };
             
             return (SizeInfo: sizeInfo, exceptions: exceptions);
@@ -109,7 +119,8 @@ namespace PSExtend.Directory
                     Size = dirSizeInfo.SizeInfo.DirectorySize,
                     FileCount = dirSizeInfo.SizeInfo.FileCount,
                     DirectoryCount = dirSizeInfo.SizeInfo.DirectoryCount,
-                    IsDirectory = true
+                    IsDirectory = true,
+                    ReparsePointCount = dirSizeInfo.SizeInfo.ReparsePointCount
                 });
             }
             
@@ -141,7 +152,8 @@ namespace PSExtend.Directory
                             Size = DirSizeInfo.SizeInfo.DirectorySize,
                             FileCount = DirSizeInfo.SizeInfo.FileCount,
                             DirectoryCount = DirSizeInfo.SizeInfo.DirectoryCount,
-                            IsDirectory = true
+                            IsDirectory = true,
+                            ReparsePointCount = DirSizeInfo.SizeInfo.ReparsePointCount
                         });
                     }
                 });
